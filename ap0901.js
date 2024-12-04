@@ -45,14 +45,25 @@ function init() {
   scene.add(plane);
 
   // 光源の設定
-  const spotLight = new THREE.SpotLight(0xffffff, 500);
-  spotLight.position.set(-2, 10, 10);
+  const spotLight = new THREE.PointLight(0xFFFFFF, 200, 100, 1.0);
+  spotLight.position.set(10, 15, 10);
   spotLight.castShadow = true;
   scene.add(spotLight);
 
+  // 画像の貼り付け
+  const textureLoader = new THREE.TextureLoader();
+  const texture0 = textureLoader.load("");
+  const texture1 = textureLoader.load("seven.png");
+  const texture2 = textureLoader.load("sakuranbo.png");
+  const texture3 = textureLoader.load("suika.png");
 
 
-
+ // コインの枚数表示
+ let coin = 5;
+ function setCoin(coin) {
+   document.getElementById("coin").innerText
+     = String(Math.round(coin));
+ }
 
 
 
@@ -82,6 +93,26 @@ function init() {
   const leverH = 6 //スロットマシンのレバーの棒の長さ(高さ)
   const seg = 12; // 円や円柱の分割数
 
+  const zugara1Geometry = new THREE.BoxGeometry(2, gamenH, 3.25);
+  const zugaraMaterial1 = new THREE.MeshLambertMaterial();
+  const zugara1 = new THREE.Mesh(zugara1Geometry, zugaraMaterial1);
+  zugaraMaterial1.map = texture0;
+  zugara1.position.set(-2, (centerH + dodaiH*2 + gamenH/2), );
+  slot.add(zugara1);
+
+  const zugara2Geometry = new THREE.BoxGeometry(2, gamenH, 3.25);
+  const zugaraMaterial2 = new THREE.MeshLambertMaterial();
+  const zugara2 = new THREE.Mesh(zugara2Geometry, zugaraMaterial2);
+  zugaraMaterial2.map = texture0;
+  zugara2.position.set(0, (centerH + dodaiH*2 + gamenH/2), );
+  slot.add(zugara2);
+
+  const zugara3Geometry = new THREE.BoxGeometry(2, gamenH, 3.25);
+  const zugaraMaterial3 = new THREE.MeshLambertMaterial();
+  const zugara3 = new THREE.Mesh(zugara3Geometry, zugaraMaterial3);
+  zugaraMaterial3.map = texture0;
+  zugara3.position.set(2, (centerH + dodaiH*2 + gamenH/2), );
+  slot.add(zugara3);
   // 土台1の作成
   const dodai1Geometry = new THREE.BoxGeometry(W, dodaiH, dodai1D);
   const dodai1 = new THREE.Mesh(dodai1Geometry, blackMaterial);
@@ -154,6 +185,79 @@ function init() {
 
 
 
+// スロットの仕組み
+function tyusen() {
+  coin -= 1;
+  zugaraMaterial1.map = texture0;
+  zugaraMaterial2.map = texture0;
+  zugaraMaterial3.map = texture0;
+  const items = ['sakuranbo', 'suika', 'seven'];
+  const randomItem1 = items[Math.floor(Math.random() * items.length)];
+  console.log(randomItem1);
+  if(randomItem1 == 'seven'){
+    zugaraMaterial1.map = texture1;
+  }
+  if(randomItem1 == 'sakuranbo'){
+    zugaraMaterial1.map = texture2;
+  }
+  if(randomItem1 == 'suika'){
+    zugaraMaterial1.map = texture3;
+  }
+
+  const randomItem2 = items[Math.floor(Math.random() * items.length)];
+  console.log(randomItem2);
+  setTimeout(() => {
+  if(randomItem2 == 'seven'){
+    zugaraMaterial2.map = texture1;
+  }
+  if(randomItem2 == 'sakuranbo'){
+    zugaraMaterial2.map = texture2;
+  }
+  if(randomItem2 == 'suika'){
+    zugaraMaterial2.map = texture3;
+  }
+}, 1000);
+
+  const randomItem3 = items[Math.floor(Math.random() * items.length)];
+  console.log(randomItem3);
+  setTimeout(() => {
+  if(randomItem3 == 'seven'){
+    zugaraMaterial3.map = texture1;
+  }
+  if(randomItem3 == 'sakuranbo'){
+    zugaraMaterial3.map = texture2;
+  }
+  if(randomItem3 == 'suika'){
+    zugaraMaterial3.map = texture3;
+  }
+}, 2000);
+
+setTimeout(() => {
+  if(randomItem1 == randomItem2 && randomItem2 == randomItem3 && randomItem3 == 'sakuranbo'){
+   console.log('sakuranboが当たりました。');
+   coin += 5;
+  }
+  if(randomItem1 == randomItem2 && randomItem2 == randomItem3 && randomItem3 == 'suika'){
+   console.log('suikaが当たりました。');
+   coin += 10;
+  }
+  if(randomItem1 == randomItem2 && randomItem2 == randomItem3 && randomItem3 == 'seven'){
+   console.log('sevenが当たりました。');
+   coin += 100;
+  }
+}, 2500);
+  }
+
+  // ボタンをクリックでスタートする
+    const button = document.getElementById('button');
+    
+    button.addEventListener('click', () => {
+      button.disabled = true;
+      tyusen();
+      setTimeout(() => {
+      button.disabled = false;
+    }, 3000);
+    });
 
 
 
@@ -195,6 +299,8 @@ function init() {
     camera.updateProjectionMatrix();
     // 座標軸の表示
     axes.visible = param.axes;
+    // コインの枚数の更新
+    setCoin(coin);
     // 描画
     renderer.render(scene, camera);
     // 次のフレームでの描画要請
