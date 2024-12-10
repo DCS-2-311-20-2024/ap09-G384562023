@@ -169,21 +169,7 @@ function init() {
   hole.position.set(0, (dodaiH + 1/2), centerD/2);
   slot.add(hole);
 
-
-
-
-
-
-
   scene.add(slot);
-
-
-
-
-
-
-
-
 
 // スロットの仕組み
 function tyusen() {
@@ -258,21 +244,6 @@ setTimeout(() => {
       button.disabled = false;
     }, 3000);
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // カメラの作成
   const camera = new THREE.PerspectiveCamera(
